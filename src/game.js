@@ -26,7 +26,6 @@ function draw() {
   if (room404) {
     drawText('Game Over', canvas.width / 2 - ctx.measureText('Game Over').width / 2, canvas.height / 2, 20, "white");
   } else if (room202) {
-    drawText(dialog, 20, 32, 20, "white");
     drawSprite(closet, 400, 138, 8, 8);
     drawSprite(desk, 200, 194, 8, 8);
     drawSprite(doorSprite, 123, 138, 8, 8);
@@ -35,15 +34,21 @@ function draw() {
     ctx.fillStyle = "lightgrey";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    drawText(dialog, 20, 32, 20, "white");
 
     drawSprite(doorSprite, 100, 138, 8, 8);
     drawSprite(airductSprite, 416, canvas.height - 30, 2, 2);
+
+    drawSprite(closetSprite, 500, 128, 8,8)
+    drawSprite(closetSprite, 500, 176, 8,8)
+    drawSprite(closetSprite, 620, 128, 8,8)
+    drawSprite(closetSprite, 620, 176, 8,8)
+    drawSprite(boxesSprite, 620, canvas.height - 4 * boxesSprite.length, 4,4)
+    drawSprite(boxesSprite1, 560, canvas.height - 4 * boxesSprite.length, 4,4)
+    drawSprite(broomSprite, 732, canvas.height - 4 * broomSprite.length, 4,4)  
   } else if (room405) {
     ctx.fillStyle = "pink";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     
-    drawText(dialog, 20, 32, 20, "white");
 
     drawSprite(doorSprite, 100, 138, 8, 8);
     
@@ -66,7 +71,6 @@ function draw() {
       );
     }
   } else if (asked) {
-    drawText(dialog, 20, 32, 20, "white");
     ctx.fillStyle = "white";
     ctx.fillRect(canvas.width / 2 - 64, 64, 128, 128);
 
@@ -96,12 +100,6 @@ function draw() {
       response ? "black" : "white"
     );
   } else {
-    drawText(dialog, 20, 32, 20, "white");
-    if (money) drawSprite(moneySprite, canvas.width - 64, 10, 2, 2);
-    if (screwdriver) drawSprite(screwdriverSprite, canvas.width - 64, 10, 2, 2);
-    if (password) drawSprite(passwordSprite, canvas.width - 64, 10, 2, 2);
-    if (keys) drawSprite(keySprite, canvas.width - 64, 10, 2, 2);
-
     doors.forEach((x, i) => {
       if (level === 1 && i > 2) {
       } else {
@@ -111,7 +109,7 @@ function draw() {
       } else if (level === 1 && i > 2) {
       } else drawSprite(doorSprite, x, 138, 8, 8);
     });
-    drawSprite(elevator, 0, 120, 8, 8);
+    drawSprite(elevator, 0, 120, 8, 140);
   }
   drawSprite(
     player.sprite[player.frame],
@@ -123,6 +121,12 @@ function draw() {
   if (dog) {
     drawSprite(dogSprite[dogFrame], player.x - 64, canvas.height - dogSprite[dogFrame].length * 3, 3, 3);
   }
+
+  drawText(dialog, 20, 32, 20, "white");
+  if (money) drawSprite(moneySprite, canvas.width - 64, 10, 2, 2);
+  if (screwdriver) drawSprite(screwdriverSprite, canvas.width - 64, 10, 2, 2);
+  if (password) drawSprite(passwordSprite, canvas.width - 64, 10, 2, 2);
+  if (keys) drawSprite(keySprite, canvas.width - 64, 10, 2, 2);
 }
 
 function update() {
@@ -358,11 +362,21 @@ function keyUpHandler(event) {
   }
 }
 
+function handleHint() {
+  if (currentHint == 0) {currentHint = 1; return "Knock my door anytime you need a hint...";}
+  else if (currentHint == 1) {currentHint = 2; return "In the half of your home you can find what you need";}
+  if (money) return "Money buys any information";
+  else if (password) return "With the right password you got screw";
+  else if (screwdriver) return "Let the air flow";
+  else if (keys) return "Help thy neighbour";
+  else return "Don't be scared";
+}
+
 function gameLogic() {
   const txt = {
     "11": "Sorry I'm packing...",
     "12": "I can ask someone if you want to...",
-    "13": hints[currentHint],
+    "13": handleHint(),
     "21": "Sorry I'm packing...",
     "22": "Come on in...",
     "23": "I can't say anything",
@@ -420,7 +434,7 @@ function drawText(t, x, y, s, c) {
 setInterval(function () {
   if (timer > -1) {
     timer--;
-    if (timer == -1) timeOut();
+    if (timer == -1) {}//timeOut();
   }
 
   update();

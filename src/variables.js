@@ -13,7 +13,4 @@ let currentHint = 0;
 let dogFrame = 0;
 let dogAnimation = 0;
 let dogSprite = [dogSprite1, dogSprite2];
-let hints = ["Knock my door anytime you need a hint..."];
-
-screwdriver = true
-room501 = true
+screwdriver = true;
