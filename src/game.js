@@ -11,8 +11,8 @@ const player = {
   frame: 0,
   animation: 0,
   x: 0,
-  y: canvas.height - (playerSprite.length * 4),
-  spriteIndexSize: 4,
+  y: canvas.height - (playerSprite.length * 10),
+  spriteIndexSize: 10,
   jumping: false,
   face: "right",
   color: "white",
@@ -22,6 +22,13 @@ const player = {
 function draw() {
   ctx.fillStyle = "#d8ccc5";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  if (level == 1 && dog && !showDialog) {
+    ctx.fillStyle = "white"
+    ctx.fillRect(canvas.width - 148, canvas.height / 2 - 16, 64, 64)
+    drawSprite(dogSprite[0], canvas.width - 128, canvas.height / 2, 2, 2);
+    drawText("Lost Dog", canvas.width - 148, canvas.height / 2 + 40, 16, "black")
+  }
 
   if (room404) {
     drawText('Game Over', canvas.width / 2 - ctx.measureText('Game Over').width / 2, canvas.height / 2, 20, "white");
@@ -80,21 +87,21 @@ function draw() {
 
     drawText(
       question,
-      canvas.width / 2 - ctx.measureText(question).width / 2,
+      canvas.width / 2 - ctx.measureText(question).width / 2 + 32,
       86,
       12,
       "black"
     );
     drawText(
       "yes",
-      canvas.width / 2 - ctx.measureText("yes").width / 2,
+      canvas.width / 2 - ctx.measureText("yes").width / 2 - 8,
       108,
       20,
       response ? "white" : "black"
     );
     drawText(
       "no",
-      canvas.width / 2 - ctx.measureText("no").width / 2,
+      canvas.width / 2 - ctx.measureText("no").width / 2 - 8,
       130,
       20,
       response ? "black" : "white"
@@ -119,7 +126,8 @@ function draw() {
     player.spriteIndexSize
   );
   if (dog) {
-    drawSprite(dogSprite[dogFrame], player.x - 64, canvas.height - dogSprite[dogFrame].length * 3, 3, 3);
+    if (player.x - dogSprite[dogFrame].length - 64 < 0) drawSprite(dogSprite[dogFrame], player.x + 64, canvas.height - dogSprite[dogFrame].length * 3, 3, 3);
+    else drawSprite(dogSprite[dogFrame], player.x - 64, canvas.height - dogSprite[dogFrame].length * 3, 3, 3);
   }
 
   drawText(dialog, 20, 32, 20, "white");
@@ -162,6 +170,7 @@ function update() {
     }
     if (keyEnter || keyZ) {
       if (response) {
+        player.x = 100;
         if (level == 2) {
           room202 = true;
           dog = true;
@@ -219,6 +228,7 @@ function update() {
       keyUp = false;
     } else {
       if (keyRight) {
+        if (player.x + player.spriteIndexSize*8 > canvas.width) player.x = canvas.width - player.spriteIndexSize * 8
         player.x += player.speed;
         player.animation++
         if (player.animation > 16) {
@@ -228,6 +238,7 @@ function update() {
         }
       }
       if (keyLeft) {
+        if (player.x<0) player.x = 0
         player.x -= player.speed;
         player.animation++
         if (player.animation > 16) {
@@ -269,6 +280,7 @@ function checkPlayerCollision() {
     else if (player.x + 56 > 500 && player.x < 572 && closet[6][14] === "G")
       dialog = "Take the money";
     else dialog = "";
+  } else if(room404) {
   } else if (room405) {
     if (player.x + 56 > 560 && player.x < 632) {
       dialog = "Enter the hole?"
@@ -364,8 +376,8 @@ function keyUpHandler(event) {
 
 function handleHint() {
   if (currentHint == 0) {currentHint = 1; return "Knock my door anytime you need a hint...";}
-  else if (currentHint == 1) {currentHint = 2; return "In the half of your home you can find what you need";}
-  if (money) return "Money buys any information";
+  else if (currentHint == 1) return "In the half of your home you can find what you need";
+  if (money) { currentHint = 2; return "Money buys any information";}
   else if (password) return "With the right password you got screw";
   else if (screwdriver) return "Let the air flow";
   else if (keys) return "Help thy neighbour";
@@ -387,7 +399,7 @@ function gameLogic() {
     "33": "Maybe someone else can help you...",
     "34": "I didn't see anything diferent",
     "35": "Maybe you need a secure ",
-    "41": `What it's the password?...${password ? "come on in..." : "...no"}`,
+    "41": `What it's the password?...${password ? "ok...you can take this" : "...no"}`,
     "42": "How much can you pay?",
     "43": "I can't talk to you",
     "44": "Where is my door?",
@@ -400,7 +412,7 @@ function gameLogic() {
   };
   const actions = {
     "22": { asked: true, question: "Enter the room?" },
-    "41": { asked: password, question: "Enter the room?" },
+    "41": { asked: password, question: "Take?" },
     "42": { asked: money, question: "Give money?" },
     "45": { asked: keys, question: "Open the door?" },
     "51": { asked: true, question: "Enter the room?" },
