@@ -77,6 +77,7 @@ function draw() {
         cl
       );
     }
+    drawText("To select the floor use Z", canvas.width / 2 - 80, canvas.height - 32, 16, 'black')
   } else if (asked) {
     ctx.fillStyle = "white";
     ctx.fillRect(canvas.width / 2 - 64, 64, 128, 128);
@@ -118,16 +119,44 @@ function draw() {
     });
     drawSprite(elevator, 0, 120, 8, 140);
   }
-  drawSprite(
-    player.sprite[player.frame],
-    player.x,
-    player.y,
-    player.spriteIndexSize,
-    player.spriteIndexSize
-  );
+  if (!showDialog && !asked) {
+    drawSprite(
+      player.sprite[player.frame],
+      player.x,
+      player.y,
+      player.spriteIndexSize,
+      player.spriteIndexSize
+    );
+  }
   if (dog) {
     if (player.x - dogSprite[dogFrame].length - 64 < 0) drawSprite(dogSprite[dogFrame], player.x + 64, canvas.height - dogSprite[dogFrame].length * 3, 3, 3);
     else drawSprite(dogSprite[dogFrame], player.x - 64, canvas.height - dogSprite[dogFrame].length * 3, 3, 3);
+  }
+
+  if (dialog && !showDialog && !asked) {
+    ctx.fillStyle = "darkgrey"
+    ctx.fillRect(player.x + 10, canvas.height / 2, 40, 40)
+    ctx.beginPath();
+    ctx.moveTo(player.x + 10, canvas.height / 2);
+    ctx.lineTo(player.x + 10, canvas.height / 2 + 40);
+    ctx.moveTo(player.x + 10, canvas.height / 2 + 40);
+    ctx.lineTo(player.x + 50, canvas.height / 2 + 40);
+    ctx.moveTo(player.x + 50, canvas.height / 2 + 40);
+    ctx.lineTo(player.x + 50, canvas.height / 2);
+    ctx.moveTo(player.x + 50, canvas.height / 2);
+    ctx.lineTo(player.x + 10, canvas.height / 2);
+    ctx.strokeStyle = "black";
+    ctx.stroke();
+    //drawText('Z', player.x + 22, player.y - 24, 20, "black")
+    ctx.beginPath();
+    ctx.moveTo(player.x + 30, canvas.height / 2 + 12);
+    ctx.lineTo(player.x + 20, canvas.height / 2 + 26);
+    ctx.moveTo(player.x + 20, canvas.height / 2 + 26);
+    ctx.lineTo(player.x + 40, canvas.height / 2 + 26);
+    ctx.moveTo(player.x + 40, canvas.height / 2 + 26);
+    ctx.lineTo(player.x + 30, canvas.height / 2 + 12);
+    ctx.strokeStyle = "black";
+    ctx.stroke();
   }
 
   drawText(dialog, 20, 32, 20, "white");
