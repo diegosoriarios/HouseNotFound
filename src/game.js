@@ -183,6 +183,7 @@ function draw() {
 function update() {
   if (showDialog) {
     if (keyUp) {
+      elevatorSoundPlay()
       keyUp = false;
       level--;
       if (level < 1) {
@@ -190,6 +191,7 @@ function update() {
       }
     }
     if (keyDown) {
+      elevatorSoundPlay()
       keyDown = false;
       level++;
       if (level > 5) {
@@ -197,6 +199,7 @@ function update() {
       }
     }
     if (keyEnter || keyZ) {
+      selectSoundPlay()
       keyEnter = keyZ = false;
       showDialog = false;
     }
@@ -207,11 +210,13 @@ function update() {
     }
   } else if (asked) {
     if (keyUp || keyDown) {
+      elevatorSoundPlay()
       keyUp = false;
       keyDown = false;
       response = !response;
     }
     if (keyEnter || keyZ) {
+      selectSoundPlay()
       if (response) {
         player.x = 100;
         if (level == 2) {
@@ -246,25 +251,33 @@ function update() {
     }
   } else {
     if (dialog == "ELEVATOR" && keyUp) {
+      elevatorSoundPlay()
       showDialog = true;
       levelBefore = level;
       keyUp = false;
     } else if (dialog.split(" ")[0] == "Open" && keyUp) {
+      knockSoundPlay()
       gameLogic();
       keyUp = false;
     } else if (dialog.split(" ")[0] == "Take" && keyUp) {
+      elevatorSoundPlay()
       closet[6][14] = "A";
       money = true;
       keyUp = false;
     } else if (dialog == "Leave" && (room202 || room501) && keyUp) {
+      elevatorSoundPlay()
       room202 = false;
       room501 = false;
       keyUp = false;
     } else if (dialog[0] == "E" && (room405) && keyUp) {
+      elevatorSoundPlay()
+      playFinalSound()
       room405 = false;
       room404 = true;
       keyUp = false;
     } else if (dialog[0] == "U" && room501 && keyUp) {
+      elevatorSoundPlay()
+      player.x = 100
       keys = true;
       airductSprite = airductSpriteOpen
       screwdriver = false;
@@ -275,6 +288,7 @@ function update() {
         player.x += player.speed;
         player.animation++
         if (player.animation > 16) {
+          walkSoundPlay()
           player.frame++
           if (player.frame == 4) player.frame = 0
           player.animation = 0
@@ -285,6 +299,7 @@ function update() {
         player.x -= player.speed;
         player.animation++
         if (player.animation > 16) {
+          walkSoundPlay()
           player.frame++
           if (player.frame == 4) player.frame = 0
           player.animation = 0
@@ -306,6 +321,11 @@ function update() {
         checkPlayerCollision();
       }
 
+      if (room404) {
+        keyLeft = false
+        keyRight = false
+      }
+
       if (changeDirection != player.face) {
         if (player.face == "left") player.sprite = [playerSpriteR, playerSpriteWalkR, playerSpriteR, playerSpriteWalk2R]
         else player.sprite = [playerSprite, playerSpriteWalk, playerSprite, playerSpriteWalk2]
@@ -324,6 +344,8 @@ function checkPlayerCollision() {
       dialog = "Take the money";
     else dialog = "";
   } else if(room404) {
+    player.x = 100
+    dialog = ""
   } else if (room405) {
     if (player.x + 56 > 560 && player.x < 632) {
       dialog = "Enter the hole?"
