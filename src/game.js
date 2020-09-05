@@ -31,7 +31,20 @@ function draw() {
   }
 
   if (room404) {
-    drawText('Game Over', canvas.width / 2 - ctx.measureText('Game Over').width / 2, canvas.height / 2, 20, "white");
+    drawSprite(playerSprite,570,player.y,player.spriteIndexSize,player.spriteIndexSize);
+    drawSprite(playerSprite,620,player.y,player.spriteIndexSize,player.spriteIndexSize);
+    drawSprite(playerSprite,280,player.y,player.spriteIndexSize,player.spriteIndexSize);
+    drawSprite(playerSprite,340,player.y,player.spriteIndexSize,player.spriteIndexSize);
+
+    drawSprite(doorSprite, 123, 138, 8, 8);
+
+    ctx.fillStyle="white"
+    ctx.fillRect(400, canvas.height / 2 - 80, 165, 50)
+    drawText('Congratulations', 410, canvas.height / 2 - 50, 20, "black");
+    drawText('Surprise!', 20, 32, 20, "white");
+    drawSprite(cake, 450, 142, 4, 4);
+    drawSprite(desk, 400, 194, 8, 8);
+
   } else if (room202) {
     drawSprite(closet, 400, 138, 8, 8);
     drawSprite(desk, 200, 194, 8, 8);
@@ -127,10 +140,11 @@ function draw() {
       player.spriteIndexSize,
       player.spriteIndexSize
     );
-  }
-  if (dog) {
-    if (player.x - dogSprite[dogFrame].length - 64 < 0) drawSprite(dogSprite[dogFrame], player.x + 64, canvas.height - dogSprite[dogFrame].length * 3, 3, 3);
-    else drawSprite(dogSprite[dogFrame], player.x - 64, canvas.height - dogSprite[dogFrame].length * 3, 3, 3);
+
+    if (dog) {
+      if (player.x - dogSprite[dogFrame].length - 64 < 0) drawSprite(dogSprite[dogFrame], player.x + 64, canvas.height - dogSprite[dogFrame].length * 3, 3, 3);
+      else drawSprite(dogSprite[dogFrame], player.x - 64, canvas.height - dogSprite[dogFrame].length * 3, 3, 3);
+    }
   }
 
   if (dialog && !showDialog && !asked) {
