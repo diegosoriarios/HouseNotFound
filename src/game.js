@@ -10,7 +10,7 @@ const player = {
   sprite: [playerSprite, playerSpriteWalk, playerSprite, playerSpriteWalk2],
   frame: 0,
   animation: 0,
-  x: 0,
+  x: canvas.width - 72,
   y: canvas.height - (playerSprite.length * 10),
   spriteIndexSize: 10,
   jumping: false,
@@ -366,11 +366,15 @@ function checkPlayerCollision() {
       door = 3;
       dialog = `Open door ${level}0${door}`;
     } else if (player.x + 56 > 550 && player.x < 622) {
-      door = 4;
-      dialog = `Open door ${level}0${door}`;
+      if (level !== 1) {
+        door = 4;
+        dialog = `Open door ${level}0${door}`;
+      }
     } else if (player.x + 56 > 700 && player.x < 722) {
-      door = 5;
-      dialog = `Open door ${level}0${door}`;
+      if (level !== 1) {
+        door = 5;
+        dialog = `Open door ${level}0${door}`;
+      }
     } else if (player.x <= 24) {
       dialog = "ELEVATOR";
     } else {
